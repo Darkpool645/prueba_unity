@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour{
-    public float moveSpeed = 5.0f;
+    public float moveSpeed = 2.0f;
     private Rigidbody rb;
+    public Transform camara;
 
     private void Start(){
         rb = GetComponent<Rigidbody>();
@@ -15,6 +16,16 @@ public class PlayerController : MonoBehaviour{
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        rb.AddForce(moveX * moveSpeed, 0, moveZ * moveSpeed, ForceMode.Acceleration);
+        Vector3 forward = camara.forward;
+        Vector3 right = camara.right;
+
+        forward.y = 0;
+        right.y = 0;
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 moveDirection = (forward *  moveZ + right * moveX);
+
+        rb.AddForce(moveDirection * moveSpeed, ForceMode.Acceleration);
     }
 } 
